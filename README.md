@@ -1,5 +1,16 @@
 # DevOps: Git + Vagrant
 
+## Prerequisites
+
+- [] Install `vagrant-dns` Plugin
+```
+vagrant plugin install vagrant-dns
+```
+
+```
+vagrant dns --start
+```
+
 ## Getting started
 
 To make it easy for you to get started with this GitHub repository, follow the below list of recommended next steps.
