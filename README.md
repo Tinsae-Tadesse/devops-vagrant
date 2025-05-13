@@ -126,8 +126,9 @@ systemctl restart apache2
 sudo a2dissite /etc/apache2/sites-available/000-default.conf
 sudo a2ensite /etc/apache2/sites-available/my-static-site.conf
 
-echo "Provisioning complete. Static site is ready!"
+echo "Provisioning complete. Site is ready!"
 ```
+> 🔁 Replace YOUR_USERNAME/YOUR_REPO_NAME with your actual GitHub repository URL.
 
 ---
 
