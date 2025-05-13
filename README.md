@@ -26,6 +26,47 @@ my-static-site/
 - `Vagrantfile`: Configuration file for the vagrant virtual machine
 - `vagrant-scripts/provision.sh`: Shell script to provision Apache2 and fetch your site content
 
+## Implementation
+### 🔧 Step 1: Create the Vagrantfile
+```
+Vagrant.configure("2") do |config|
+  # Configure base OS image
+  config.vm.box = "ubuntu/bionic64"
+
+  # Configure host manager for DNS resolution 
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = true
+  config.hostmanager.manage_guest = true
+  config.hostmanager.ignore_private_ip = false
+  config.hostmanager.include_offline = true
+  
+  config.vm.define "web-server" do |web|
+    # Hostname used inside the VM and on the host machine
+    web.vm.hostname = "web-vm"
+    
+    # Configure subdomain pattern
+    web.hostmanager.aliases = %w(web-vm.example.local web-vm.local)
+    
+    # Assign a private IP to the VM
+    web.vm.network "private_network", ip: "192.168.56.10"
+    
+    # Create a forwarded port mapping between the host and guest machine ports
+    web.vm.network "forwarded_port", guest: 80, host: 1234
+    
+    # Provider-specific configurations: such as memory allocation.
+    web.vm.provider "virtualbox" do |vb|
+      vb.memory = "1024"
+      vb.name = "web-server"
+    end
+
+    # Configure provisioning through a Shell script
+    web.vm.provision "bootstrap-config", type: "shell" do |script|
+      script.path = "./vagrant-scripts/provision.sh"
+    end
+  end
+end
+```
+
 ## 🌐 Accessing the Website
 
 ## Getting started
