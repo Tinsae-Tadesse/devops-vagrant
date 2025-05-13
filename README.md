@@ -12,9 +12,19 @@ Before starting, make sure the following tools are installed on your local machi
 vagrant plugin install vagrant-hostmanager
 ```
 
-## 📁 Directory Structure
-Your project directory should look like this:
-
+## 📁 Project Directory Structure
+Create a new directory for your project:
+```
+my-static-site/
+├── assets/
+├── images/
+├── vagrant-scripts/
+├── vagrant-scripts/provision.sh
+├── index.html
+├── Vagrantfile
+```
+- Vagrantfile: Configuration file for the vagrant virtual machine
+- provision.sh: Shell script to provision Apache2 and fetch your site content
 
 ## 🌐 Accessing the Website
 
