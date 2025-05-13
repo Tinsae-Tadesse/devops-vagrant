@@ -1,18 +1,19 @@
 # Hosting a Website with Vagrant, Apache2, and vagrant-hostmanager
 
 ## Overview
-This guide walks you through setting up a local development environment using Vagrant, Apache2, and the vagrant-hostmanager plugin. The website content is cloned from a GitHub repository into the virtual machine and served via Apache2.
+This guide walks you through creating a portable development environment using Vagrant, serving a static website via Apache2, and managing local DNS entries automatically using the vagrant-hostmanager plugin. Your website content will be cloned from a GitHub repository directly into the VM and served via Apache2.
 
-## 📋 Prerequisites
+## ✅ Prerequisites
+Before starting, make sure the following tools are installed on your local machine:
 - [ ] Install [Virtual Box](https://www.virtualbox.org/wiki/Downloads)
 - [ ] Install [Vagrant](https://developer.hashicorp.com/vagrant/install)
-- [ ] Install [Vagrant Hostmanager](https://github.com/devopsgroup-io/vagrant-hostmanager) plugin
+- [ ] Install [Vagrant Hostmanager](https://github.com/devopsgroup-io/vagrant-hostmanager) plugin for managing local name entries:
 ```
 vagrant plugin install vagrant-hostmanager
 ```
 
 ## 📁 Directory Structure
-
+Your project directory should look like this:
 
 
 ## 🌐 Accessing the Website
