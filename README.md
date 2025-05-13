@@ -1,7 +1,7 @@
 # Hosting a Website with Vagrant, Apache2, and vagrant-hostmanager
 
 ## Overview
-This guide walks you through creating a portable development environment using Vagrant, serving a static website via Apache2, and managing local DNS entries automatically using the vagrant-hostmanager plugin. Your website content will be cloned from a GitHub repository directly into the VM and served via Apache2.
+This guide walks you through creating a portable development environment using **Vagrant**, serving a static website via **Apache2**, and managing local DNS entries automatically using the **vagrant-hostmanager** plugin. Your website content will be cloned from a **GitHub repository** directly into the VM and served via Apache2.
 
 ## ✅ Prerequisites
 Before starting, make sure the following tools are installed on your local machine:
@@ -23,8 +23,8 @@ my-static-site/
 ├── index.html
 ├── Vagrantfile
 ```
-- Vagrantfile: Configuration file for the vagrant virtual machine
-- provision.sh: Shell script to provision Apache2 and fetch your site content
+- `Vagrantfile`: Configuration file for the vagrant virtual machine
+- `vagrant-scripts/provision.sh`: Shell script to provision Apache2 and fetch your site content
 
 ## 🌐 Accessing the Website
 
