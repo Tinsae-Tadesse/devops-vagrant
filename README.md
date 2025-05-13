@@ -12,6 +12,8 @@ Before starting, make sure the following tools are installed on your local machi
 vagrant plugin install vagrant-hostmanager
 ```
 
+---
+
 ## 📁 Project Directory Structure
 Create a new directory for your project:
 ```
@@ -26,8 +28,11 @@ my-static-site/
 - `Vagrantfile`: Configuration file for the vagrant virtual machine
 - `vagrant-scripts/provision.sh`: Shell script to provision Apache2 and fetch your site content
 
+---
+
 ## Implementation
 ### 🔧 Step 1: Create the Vagrantfile
+Create a Vagrantfile with the following content:
 ```
 Vagrant.configure("2") do |config|
   # Configure base OS image
@@ -66,6 +71,65 @@ Vagrant.configure("2") do |config|
   end
 end
 ```
+
+---
+
+### ⚙️ Step 2: Write the provision.sh Script
+This script installs Apache2, clones your GitHub repository into the web root, and restarts Apache.
+```
+#!/usr/bin/env bash
+
+# Stop on first error
+set -e
+
+# Update package lists
+echo "Updating package lists..."
+sudo apt-get update -y
+
+# Install Apache and Git
+echo "Installing Apache2 and Git..."
+sudo apt-get install -y apache2 git
+
+# Define target directory and GitHub repo
+WEB_ROOT="/var/www/my-static-site"
+REPO_URL="https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git"
+
+# Clean the web root and clone your repo
+echo "Cloning website repository..."
+sudo rm -rf $WEB_ROOT
+git clone $REPO_URL
+sudo mkdir $WEB_ROOT
+sudo mv ./YOUR_REPO_NAME/* $WEB_ROOT
+sudo rm -rf ./YOUR_REPO_NAME
+
+# Set permissions
+echo "Setting file permissions..."
+
+# Configure setting
+echo "Configuring setting..."
+sudo echo """
+<VirtualHost *:80>
+    ServerName web-vm.example.local
+    DocumentRoot $WEB_ROOT
+    <Directory $WEB_ROOT>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+""" > /etc/apache2/sites-available/my-static-site.conf
+chown -R www-data:www-data $WEB_ROOT
+
+# Restart Apache
+echo "Restarting Apache2..."
+systemctl restart apache2
+sudo a2dissite /etc/apache2/sites-available/000-default.conf
+sudo a2ensite /etc/apache2/sites-available/my-static-site.conf
+
+echo "Provisioning complete. Static site is ready!"
+```
+
+---
 
 ## 🌐 Accessing the Website
 

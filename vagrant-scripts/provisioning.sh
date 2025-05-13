@@ -4,13 +4,13 @@
 echo "==> Updating OS packages..."
 sudo apt-get update -y
 
-# Install Git
-echo "==> Installing Git..."
-sudo apt-get install git -y
+# Install Apache2 and Git
+echo "==> Installing Apache2 and Git..."
+sudo apt-get install git apache2 -y
 
-# Install Apache
+# Install 
 echo "==> Installing Apache2..."
-sudo apt-get install apache2 -y
+sudo apt-get install  -y
 
 # Stop Apache2 Service
 echo "==> Stoping Apache2 Service..."
@@ -48,5 +48,5 @@ sudo chmod -R 755 /var/www/web-vm.example.local
 # Start Apache2 Service
 echo "==> Starting Apache2 Service..."
 sudo systemctl start apache2.service
-sudo a2dissite 000-default.conf
-sudo a2ensite web-vm.example.local
+sudo a2dissite /etc/apache2/sites-available/000-default.conf
+sudo a2ensite /etc/apache2/sites-available/web-vm.example.local.conf
