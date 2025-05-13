@@ -1,15 +1,17 @@
-# DevOps: Git + Vagrant
+# Hosting a Website with Vagrant, Apache2, and vagrant-hostmanager
 
-## Prerequisites
+## Overview
+This guide walks you through setting up a local development environment using Vagrant, Apache2, and the vagrant-hostmanager plugin. The website content is cloned from a GitHub repository into the virtual machine and served via Apache2.
 
-- [] Install `vagrant-dns` Plugin
+## 📋 Prerequisites
+Install [Virtual Box](https://www.virtualbox.org/wiki/Downloads)
+Install [Vagrant](https://developer.hashicorp.com/vagrant/install)
+Install [Vagrant Hostmanager](https://github.com/devopsgroup-io/vagrant-hostmanager) plugin
 ```
-vagrant plugin install vagrant-dns
+vagrant plugin install vagrant-hostmanager
 ```
 
-```
-vagrant dns --start
-```
+## 🌐 Accessing the Website
 
 ## Getting started
 
