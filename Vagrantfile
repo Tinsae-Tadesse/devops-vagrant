@@ -24,10 +24,6 @@ Vagrant.configure("2") do |config|
     # Configure subdomain pattern
     web.hostmanager.aliases = %w(web-vm.example.local web-vm-alias)
 
-	  # Create a forwarded port mapping which allows access to a specific port
-	  # within the machine from a port on the host machine. 
-	  web.vm.network "forwarded_port", guest: 80, host: 1234
-
 	  # Create a private network, which allows host-only access to the machine
 	  # using a specific IP.
 	  web.vm.network "private_network", ip: "192.168.56.10"

@@ -55,9 +55,6 @@ Vagrant.configure("2") do |config|
     # Assign a private IP to the VM
     web.vm.network "private_network", ip: "192.168.56.10"
     
-    # Create a forwarded port mapping between the host and guest machine ports
-    web.vm.network "forwarded_port", guest: 80, host: 1234
-    
     # Provider-specific configurations: such as memory allocation.
     web.vm.provider "virtualbox" do |vb|
       vb.memory = "1024"
@@ -91,25 +88,25 @@ echo "Installing Apache2 and Git..."
 sudo apt-get install -y apache2 git
 
 # Define target directory and GitHub repo
-WEB_ROOT="/var/www/my-static-site"
+SITE_NAME="my-static-site"
+WEB_ROOT="/var/www/$SITE_NAME"
+SITE_CONF_DIR="/etc/apache2/sites-available"
 REPO_URL="https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git"
+
+# Stop Apache2 Service
+echo "Stoping Apache2 Service..."
+sudo systemctl stop apache2.service
 
 # Clean the web root and clone your repo
 echo "Cloning website repository..."
-sudo rm -rf $WEB_ROOT
-git clone $REPO_URL
-sudo mkdir $WEB_ROOT
-sudo mv ./YOUR_REPO_NAME/* $WEB_ROOT
-sudo rm -rf ./YOUR_REPO_NAME
-
-# Set permissions
-echo "Setting file permissions..."
+git clone $REPO_URL $SITE_NAME
+sudo mv $SITE_NAME /var/www/
 
 # Configure setting
 echo "Configuring setting..."
-sudo echo """
+echo """
 <VirtualHost *:80>
-    ServerName web-vm.example.local
+    ServerName $SITE_NAME
     DocumentRoot $WEB_ROOT
     <Directory $WEB_ROOT>
         Options Indexes FollowSymLinks
@@ -117,14 +114,15 @@ sudo echo """
         Require all granted
     </Directory>
 </VirtualHost>
-""" > /etc/apache2/sites-available/my-static-site.conf
-chown -R www-data:www-data $WEB_ROOT
+""" | sudo tee "$SITE_CONF_DIR/$SITE_NAME.conf" > /dev/null
+sudo chown -R $USER:$USER $WEB_ROOT
+sudo chmod -R 755 $WEB_ROOT
 
 # Restart Apache
 echo "Restarting Apache2..."
-systemctl restart apache2
-sudo a2dissite /etc/apache2/sites-available/000-default.conf
-sudo a2ensite /etc/apache2/sites-available/my-static-site.conf
+systemctl start apache2
+sudo a2dissite 000-default.conf
+sudo a2ensite "$SITE_NAME.conf"
 
 echo "Provisioning complete. Site is ready!"
 ```
