@@ -59,7 +59,8 @@ define("DB_USER", "$DB_USER");
 define("DB_PASS", "$DB_PASS");
 define("DB_NAME", "$DB_NAME");
 ?>
-""" | sudo tee "$PHP_ROOT/config.php" > /dev/null
+""" | sudo tee "$PHP_ROOT/config.php.template" > /dev/null
+sudo mv "$PHP_ROOT/config.php.template" "$PHP_ROOT/config.php"
 
 # Start Apache2 Service
 echo "==> Starting Apache2 Service..."
