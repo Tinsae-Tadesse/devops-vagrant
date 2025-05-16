@@ -12,14 +12,14 @@ echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null
 # Update the OS
 echo "==> Updating OS packages..."
 sudo apt-get update -y
-sudo apt install build-essential dkms linux-headers-$(uname -r) -y
+sudo apt-get install build-essential dkms linux-headers-$(uname -r) -y
 
 # Install Apache2 and Git
 echo "==> Installing Apache2, php, and Git..."
 sudo apt-get install apache2 php libapache2-mod-php php-mysql git -y
 
 # Define target directory and GitHub repo
-SITE_NAME="web-vm.example.local"
+SITE_NAME="web.example.local"
 WEB_ROOT="/var/www/$SITE_NAME"
 PHP_ROOT="$WEB_ROOT/server-scripts"
 SITE_CONF_DIR="/etc/apache2/sites-available"
@@ -43,7 +43,16 @@ sudo mv $SITE_NAME /var/www/
 # Configure Apache2
 echo "==> Configuring Apache2..."
 echo """
-<VirtualHost *:80>
+<VirtualHost 0.0.0.0:80>
+    ServerName $SITE_NAME
+    DocumentRoot $WEB_ROOT
+    <Directory $WEB_ROOT>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+<VirtualHost [::]:80>
     ServerName $SITE_NAME
     DocumentRoot $WEB_ROOT
     <Directory $WEB_ROOT>
