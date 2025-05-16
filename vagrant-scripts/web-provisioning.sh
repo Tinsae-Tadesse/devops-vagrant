@@ -1,16 +1,22 @@
 #!/bin/bash
 
+DB_HOST=$1
+DB_USER=$2
+DB_PASS=$3
+DB_NAME=$4
+
 # Update the OS
 echo "==> Updating OS packages..."
 sudo apt-get update -y
 
 # Install Apache2 and Git
-echo "==> Installing Apache2 and Git..."
-sudo apt-get install git apache2 -y
+echo "==> Installing Apache2, php, and Git..."
+sudo apt-get install apache2 php libapache2-mod-php php-mysql git -y
 
 # Define target directory and GitHub repo
 SITE_NAME="web-vm.example.local"
 WEB_ROOT="/var/www/$SITE_NAME"
+PHP_ROOT="$WEB_ROOT/server-scripts"
 SITE_CONF_DIR="/etc/apache2/sites-available"
 REPO_URL="https://github.com/Tinsae-Tadesse/devops-vagrant.git"
 
@@ -44,6 +50,16 @@ echo """
 """ | sudo tee "$SITE_CONF_DIR/$SITE_NAME.conf" > /dev/null
 sudo chown -R $USER:$USER $WEB_ROOT
 sudo chmod -R 755 $WEB_ROOT
+
+# Configuring php
+echo """
+<?php
+define("DB_HOST", "$DB_HOST");
+define("DB_USER", "$DB_USER");
+define("DB_PASS", "$DB_PASS");
+define("DB_NAME", "$DB_NAME");
+?>
+""" | sudo tee "$PHP_ROOT/config.php" > /dev/null
 
 # Start Apache2 Service
 echo "==> Starting Apache2 Service..."

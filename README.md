@@ -130,31 +130,36 @@ echo "Provisioning complete. Site is ready!"
 
 ---
 
+### 🚀 Step 3: Launch the Environment
+Run the following commands in your terminal from the `my-static-site/` directory:
+```
+vagrant up
+```
+This will:
+
+1. Download the Ubuntu base image (if not already cached)
+2. Create and start the virtual machine
+3. Run `provision.sh` to install packages and fetch your website
+4. Update your local `/etc/hosts` to map `web-vm.example.local` to `192.168.56.10`
+
+---
+
 ## 🌐 Accessing the Website
+Once the VM is running and provisioned, open your browser and visit:
+```
+http://web-vm.example.local
+```
+You should see the content of your GitHub repository served via Apache.
 
-## Getting started
+---
 
-To make it easy for you to get started with this GitHub repository, follow the below list of recommended next steps.
+## 🔚 Conclusion
+You've now set up a full-featured local development environment that mirrors production behavior using open-source tools. This setup is ideal for:
 
-## Add your files
+Front-end developers testing static sites
 
-- [ ] Clone this repository and tell `git` start tracking changes.
-```
-git clone https://gitlab.com/tinsaetadesse2015/devops-git.git
-cd devops-git
-git init --initial-branch=dev
-git add --all
-```
-- [ ] Apply the neccessary changes to the cloned files and push the new change to an existing Git repository.
-```
-git remote add origin https://github.com/Tinsae-Tadesse/devops-git.git
-git commit --message "initial commit"
-git push -u origin dev
-```
-- [ ] If the above push fails, due to commit differences between local and remote repos, then do the following.
-```
-git pull origin dev --allow-unrelated-histories
-git commit --message "fixed issue"
-git push -u origin dev
-```
+Quick project demos
+
+Offline development
+
 
