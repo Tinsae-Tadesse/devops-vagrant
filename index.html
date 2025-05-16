@@ -152,7 +152,7 @@
 					</header>
 					<div class="row">
 						<div class="col-12">
-							<form method="post" action="server-scripts/contact.php">
+							<form id="contactForm" method="post" action="server-scripts/contact.php">
 								<div class="row">
 									<div class="col-6 col-12-small">
 										<input type="text" name="name" id="name" placeholder="Name" />
@@ -172,6 +172,10 @@
 											<li><input type="reset" value="Clear Form" class="alt" /></li>
 										</ul>
 									</div>
+								</div>
+								<div class="row">
+								  <div class="col-12" id="formResponse">
+								  </div>
 								</div>
 							</form>
 						</div>
@@ -202,6 +206,6 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
-
+      <script src="assets/js/contact.js"></script>
 	</body>
 </html>
