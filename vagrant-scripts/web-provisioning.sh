@@ -5,9 +5,14 @@ DB_USER=$2
 DB_PASS=$3
 DB_NAME=$4
 
+# Configure upstream DNS server
+echo "==> Fixing DNS..."
+echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null
+
 # Update the OS
 echo "==> Updating OS packages..."
 sudo apt-get update -y
+sudo apt install build-essential dkms linux-headers-$(uname -r) -y
 
 # Install Apache2 and Git
 echo "==> Installing Apache2, php, and Git..."

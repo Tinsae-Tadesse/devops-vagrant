@@ -2,9 +2,14 @@
 
 DB_VM_IP=$1
 
+# Configure upstream DNS server
+echo "==> Fixing DNS..."
+echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null
+
 # Update the OS
 echo "==> Updating OS packages..."
 sudo apt-get update -y
+sudo apt install build-essential dkms linux-headers-$(uname -r) -y
 
 # Install MySQL
 echo "==> Installing MySQL..."
