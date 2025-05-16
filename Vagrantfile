@@ -31,7 +31,7 @@ Vagrant.configure("2") do |config|
 
 	  # Create a private network, which allows host-only access to the machine
 	  # using a specific IP.
-	  web.vm.network "private_network", ip: "192.168.56.10", virtualbox__intnet: true
+	  web.vm.network "private_network", ip: "192.168.56.10"
 	    
 	  # Provider-specific configurations: such as memory allocation.
 	  web.vm.provider "virtualbox" do |vb|
@@ -56,7 +56,7 @@ Vagrant.configure("2") do |config|
 	  
     # Create a private network, which allows host-only access to the machine
 	  # using a specific IP.
-	  db.vm.network "private_network", ip: "192.168.56.12", virtualbox__intnet: true
+	  db.vm.network "private_network", ip: "192.168.56.12"
 	  
 	  # Provider-specific configurations: such as memory allocation.
 	  db.vm.provider "virtualbox" do |vb|
