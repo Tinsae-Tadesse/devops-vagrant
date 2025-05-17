@@ -7,7 +7,8 @@ DB_HOST = "192.168.56.12"
 DB_USER = "myuser"
 DB_PASS = "mypassword"
 DB_NAME = "myapp"
-BOX_RAM_MB = 1024
+BOX_RAM_MB = "512"
+BOX_CPU_COUNT = "1"
 
 Vagrant.configure("2") do |config|
   
@@ -39,6 +40,7 @@ Vagrant.configure("2") do |config|
 	  # Provider-specific configurations: such as memory allocation.
 	  web.vm.provider "virtualbox" do |vb|
 	     vb.memory = BOX_RAM_MB
+	     vb.cpus = BOX_CPU_COUNT
 	     vb.name = "web-server"
 	  end
 	  
@@ -64,6 +66,7 @@ Vagrant.configure("2") do |config|
 	  # Provider-specific configurations: such as memory allocation.
 	  db.vm.provider "virtualbox" do |vb|
 	     vb.memory = BOX_RAM_MB
+	     vb.cpus = BOX_CPU_COUNT
 	     vb.name = "db-server"
 	  end
 
