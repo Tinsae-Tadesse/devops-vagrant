@@ -1,7 +1,18 @@
-# Hosting a Website with Vagrant, Apache2, and vagrant-hostmanager
+# 🧰 Hosting a LAMP Stack Website Using Vagrant, Apache2, and vagrant-hostmanager
 
 ## Overview
 This guide walks you through creating a portable development environment using **Vagrant**, serving a static website via **Apache2**, and managing local DNS entries automatically using the **vagrant-hostmanager** plugin. Your website content will be cloned from a **GitHub repository** directly into the VM and served via Apache2.
+
+## 📦 Architecture Overview
+- [] Web VM (Apache + PHP):
+- Hosts the frontend website
+- Connects to DB VM using PHP (mysqli)
+
+- [] Database VM (MySQL):
+- Stores website data
+- Accepts remote connections from Web VM
+
+- [] Uses vagrant-hostmanager to define local hostnames (e.g., web.example.local)
 
 ## ✅ Prerequisites
 Before starting, make sure the following tools are installed on your local machine:
