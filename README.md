@@ -28,15 +28,15 @@ vagrant plugin install vagrant-hostmanager
 ## 📁 Project Directory Structure
 Create a new directory for your project:
 ```
-my-static-site/
+web.example.local/
 ├── assets/
 │   ├── js/
-│   │   ├── contact.js
+│   │   ├── contact.js        # Used for semding Ajax requests to contact.php from index.html
 ├── images/
 ├── server-scripts/
-│   ├── config.php.template   # modified on provisioning
-│   ├── contact.php
-│   ├── db-connect.php
+│   ├── config.php.template   # modified at provisioning time
+│   ├── contact.php           # Used for handling contact messages sent by visitors
+│   ├── db-connect.php        # Used for estabilishing database connection from php
 ├── vagrant-scripts/
 │   ├── web_provision.sh
 │   ├── db_provision.sh
@@ -297,7 +297,7 @@ echo "==> Provisioning complete. MySQL database is ready!"
 ---
 
 ### 🚀 Step 3: Launch the Environment
-Run the following commands in your terminal from the `my-static-site/` directory:
+Run the following command in your terminal from the `web.example.local/` directory:
 ```
 vagrant up
 ```
@@ -305,17 +305,17 @@ This will:
 
 1. Download the Ubuntu base image (if not already cached)
 2. Create and start the virtual machine
-3. Run `provision.sh` to install packages and fetch your website
-4. Update your local `/etc/hosts` to map `web-vm.example.local` to `192.168.56.10`
+3. Run `web_provision.sh` and `db_provision.sh` to install packages, fetch your website, and make configuration changes
+4. Update your local `/etc/hosts` to map `web.example.local` to `x.x.x.x` and `db-vm.local` to `y.y.y.y`
 
 ---
 
 ## 🌐 Accessing the Website
-Once the VM is running and provisioned, open your browser and visit:
+Once the VMs are running and provisioned, open your browser and visit:
 ```
-http://web-vm.example.local
+http://web.example.local
 ```
-You should see the content of your GitHub repository served via Apache.
+You should see the content of your website inside your GitHub repository served via Apache.
 
 ---
 

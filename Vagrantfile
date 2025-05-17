@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
 	  db.vm.hostname = "db-vm"
 	  
 	  # Configure subdomain pattern
-    db.hostmanager.aliases = %w(db.example.local db-vm.local)
+    db.hostmanager.aliases = %w(db-vm.local)
 	  
     # Create a private network, which allows host-only access to the machine
 	  # using a specific IP.
