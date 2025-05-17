@@ -53,9 +53,22 @@ my-static-site/
 ### 🔧 Step 1: Create the Vagrantfile
 Create a Vagrantfile with the following content:
 ```
+### configuration parameters ###
+WEB_HOST = "x.x.x.x"
+DB_HOST = "y.y.y.y"
+DB_USER = "myuser"
+DB_PASS = "mypassword"
+DB_NAME = "myapp"
+BOX_RAM_MB = "512"
+BOX_CPU_COUNT = "1"
+
 Vagrant.configure("2") do |config|
-  # Configure base OS image
-  config.vm.box = "ubuntu/bionic64"
+  
+  # This configures what box the machine will be brought up against. 
+  config.vm.box = "hashicorp/bionic64"
+  
+  # The version of the box to use.
+  config.vm.box_version = "1.0.282"
 
   # Configure host manager for DNS resolution 
   config.hostmanager.enabled = true
@@ -65,25 +78,55 @@ Vagrant.configure("2") do |config|
   config.hostmanager.include_offline = true
   
   config.vm.define "web-server" do |web|
-    # Hostname used inside the VM and on the host machine
-    web.vm.hostname = "web-vm"
+  
+    # The hostname the machine should have. 
+	  web.vm.hostname = "web-vm"
     
     # Configure subdomain pattern
-    web.hostmanager.aliases = %w(web-vm.example.local web-vm.local)
-    
-    # Assign a private IP to the VM
-    web.vm.network "private_network", ip: "192.168.56.10"
-    
-    # Provider-specific configurations: such as memory allocation.
-    web.vm.provider "virtualbox" do |vb|
-      vb.memory = "1024"
-      vb.name = "web-server"
-    end
+    web.hostmanager.aliases = %w(web.example.local web-vm.local)
 
-    # Configure provisioning through a Shell script
-    web.vm.provision "bootstrap-config", type: "shell" do |script|
-      script.path = "./vagrant-scripts/provision.sh"
-    end
+	  # Create a private network, which allows host-only access to the machine
+	  # using a specific IP.
+	  web.vm.network "private_network", ip: WEB_HOST
+	    
+	  # Provider-specific configurations: such as memory and cpu allocation.
+	  web.vm.provider "virtualbox" do |vb|
+	     vb.memory = BOX_RAM_MB
+	     vb.cpus = BOX_CPU_COUNT
+	     vb.name = "web-server"
+	  end
+	  
+	  # Enable provisioning with a Shell script.
+	  web.vm.provision "bootstrap-config", type: "shell" do |script|
+		  script.path = "./vagrant-scripts/web_provision.sh"
+		  script.args = [DB_HOST, DB_USER, DB_PASS, DB_NAME]
+	  end
+  end
+  
+  # Database Server VM
+  config.vm.define "db-server" do |db|
+    # The hostname the machine should have. 
+	  db.vm.hostname = "db-vm"
+	  
+	  # Configure subdomain pattern
+    db.hostmanager.aliases = %w(db.example.local db-vm.local)
+	  
+    # Create a private network, which allows host-only access to the machine
+	  # using a specific IP.
+	  db.vm.network "private_network", ip: DB_HOST
+	  
+	  # Provider-specific configurations: such as memory and cpu allocation.
+	  db.vm.provider "virtualbox" do |vb|
+	     vb.memory = BOX_RAM_MB
+	     vb.cpus = BOX_CPU_COUNT
+	     vb.name = "db-server"
+	  end
+
+    # Enable provisioning with a Shell script.
+	  db.vm.provision "bootstrap-config", type: "shell" do |script|
+		  script.path = "./vagrant-scripts/db_provision.sh"
+		  script.args = [DB_HOST]
+	  end
   end
 end
 ```
@@ -91,40 +134,70 @@ end
 ---
 
 ### ⚙️ Step 2: Write the provision.sh Script
-This script installs Apache2, clones your GitHub repository into the web root, and restarts Apache.
+#### web_provision.sh
+This script installs Apache2, php, and Git; clones the GitHub repository into the web root, and configures Apache and php.
 ```
-#!/usr/bin/env bash
+#!/bin/bash
 
-# Stop on first error
-set -e
+DB_HOST=$1
+DB_USER=$2
+DB_PASS=$3
+DB_NAME=$4
 
-# Update package lists
-echo "Updating package lists..."
+# Configure upstream DNS server
+echo "==> Fixing DNS..."
+echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null
+echo "==> Finished fixing DNS."
+
+# Update the OS
+echo "==> Updating OS packages..."
 sudo apt-get update -y
+sudo apt-get install build-essential dkms linux-headers-$(uname -r) -y
+echo "==> Finished updating OS packages."
 
-# Install Apache and Git
-echo "Installing Apache2 and Git..."
-sudo apt-get install -y apache2 git
+# Install Apache2 and Git
+echo "==> Installing Apache2, php, and Git..."
+sudo apt-get install apache2 php libapache2-mod-php php-mysql git -y
+echo "==> Finished installing Apache2, php, and Git."
 
 # Define target directory and GitHub repo
-SITE_NAME="my-static-site"
+SITE_NAME="web.example.local"
 WEB_ROOT="/var/www/$SITE_NAME"
+PHP_ROOT="$WEB_ROOT/server-scripts"
 SITE_CONF_DIR="/etc/apache2/sites-available"
 REPO_URL="https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git"
 
 # Stop Apache2 Service
-echo "Stoping Apache2 Service..."
+echo "==> Stoping Apache2 Service..."
 sudo systemctl stop apache2.service
+echo "==> Finished stoping Apache2 service."
 
-# Clean the web root and clone your repo
-echo "Cloning website repository..."
+# Cleaning up Files and Directories
+echo "==> Cleaning up files and directories..."
+sudo rm -fr $SITE_NAME
+sudo rm -f "$SITE_CONF_DIR/$SITE_NAME.conf"
+sudo rm -fr $WEB_ROOT
+echo "==> Finished cleaning up files and directories."
+
+# Download Files from Remote Repository
+echo "==> Cloning website..."
 git clone $REPO_URL $SITE_NAME
 sudo mv $SITE_NAME /var/www/
+echo "==> Finished cloning wbsite."
 
-# Configure setting
-echo "Configuring setting..."
+# Configure Apache2
+echo "==> Configuring Apache2..."
 echo """
-<VirtualHost *:80>
+<VirtualHost 0.0.0.0:80>
+    ServerName $SITE_NAME
+    DocumentRoot $WEB_ROOT
+    <Directory $WEB_ROOT>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+<VirtualHost [::]:80>
     ServerName $SITE_NAME
     DocumentRoot $WEB_ROOT
     <Directory $WEB_ROOT>
@@ -136,14 +209,28 @@ echo """
 """ | sudo tee "$SITE_CONF_DIR/$SITE_NAME.conf" > /dev/null
 sudo chown -R $USER:$USER $WEB_ROOT
 sudo chmod -R 755 $WEB_ROOT
+echo "==> Finished configuring Apache2."
 
-# Restart Apache
-echo "Restarting Apache2..."
-systemctl start apache2
+# Configuring php
+echo "==> Configuring PHP..."
+echo """
+<?php
+define('DB_HOST', '${DB_HOST}');
+define('DB_USER', '${DB_USER}');
+define('DB_PASS', '${DB_PASS}');
+define('DB_NAME', '${DB_NAME}');
+?>
+""" | sudo tee "$PHP_ROOT/config.php.template" > /dev/null
+sudo mv "$PHP_ROOT/config.php.template" "$PHP_ROOT/config.php"
+echo "==> Finished configuring PHP."
+
+# Start Apache2 Service
+echo "==> Starting Apache2 Service..."
+sudo systemctl start apache2.service
 sudo a2dissite 000-default.conf
 sudo a2ensite "$SITE_NAME.conf"
-
-echo "Provisioning complete. Site is ready!"
+echo "==> Finished starting Apache2 service."
+echo "==> Provisioning complete. Site is ready!"
 ```
 > 🔁 Replace YOUR_USERNAME/YOUR_REPO_NAME with your actual GitHub repository URL.
 

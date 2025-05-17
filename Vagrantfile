@@ -2,8 +2,8 @@
 # vi: set ft=ruby :
 
 ### configuration parameters ###
-WEB_HOST = "192.168.56.10"
-DB_HOST = "192.168.56.12"
+WEB_HOST = "x.x.x.x"
+DB_HOST = "y.y.y.y"
 DB_USER = "myuser"
 DB_PASS = "mypassword"
 DB_NAME = "myapp"
