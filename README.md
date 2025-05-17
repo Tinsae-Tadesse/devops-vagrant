@@ -1,7 +1,7 @@
-# 🧰 Hosting a LAMP Stack Website Using Vagrant, Apache2, and vagrant-hostmanager
+# 🧰 Hosting a LAMP (Linux, Apache, MySQL, and PHP) Stack Website Using Vagrant
 
 ## Overview
-This guide walks you through creating a portable development environment using **Vagrant**, serving a static website via **Apache2**, and managing local DNS entries automatically using the **vagrant-hostmanager** plugin. Your website content will be cloned from a **GitHub repository** directly into the VM and served via Apache2.
+This guide walks you through creating a portable LAMP stack development environment using **Vagrant**. It provisions separate virtual machines for the web server **(Apache2 + PHP)** and the database **(MySQL)**, with local DNS resolution managed automatically by the **vagrant-hostmanager** plugin. Website content is cloned from a **GitHub** repository into the web server VM and served through Apache2 with dynamic PHP processing and database interaction via MySQL.
 
 ## 📦 Architecture Overview
 - [ ] Web VM (Apache + PHP):
@@ -30,9 +30,16 @@ Create a new directory for your project:
 ```
 my-static-site/
 ├── assets/
+│   ├── js/
+│   │   ├── contact.js
 ├── images/
+├── server-scripts/
+│   ├── config.php.template
+│   ├── contact.php
+│   ├── db-connect.php
 ├── vagrant-scripts/
-├── vagrant-scripts/provision.sh
+│   ├── web_provision.sh
+│   ├── db_provision.sh
 ├── index.html
 ├── Vagrantfile
 ```
