@@ -33,8 +33,8 @@ debconf-set-selections <<< "mysql-server mysql-server/root_password password $RO
 debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $ROOT_PASSWORD"
 
 mysql -u$ROOT_USER -p$ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u$ROOT_USER -p$ROOT_PASSWORD -e "CREATE USER IF NOT EXISTS '$DB_USER'@'$WEB_VM_IP' IDENTIFIED BY '$DB_USER_PASSWORD';"
-mysql -u$ROOT_USER -p$ROOT_PASSWORD -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'$WEB_VM_IP';"
+mysql -u$ROOT_USER -p$ROOT_PASSWORD -e "CREATE USER IF NOT EXISTS '$DB_USER'@'$DB_VM_IP' IDENTIFIED BY '$DB_USER_PASSWORD';"
+mysql -u$ROOT_USER -p$ROOT_PASSWORD -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'$DB_VM_IP';"
 mysql -u$ROOT_USER -p$ROOT_PASSWORD -e "FLUSH PRIVILEGES;"
 echo "==> Finished configuring MySQL."
 
