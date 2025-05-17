@@ -1,10 +1,13 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-db_host = "192.168.56.12"
-db_user = "myuser"
-db_pass = "mypassword"
-db_name = "myapp"
+### configuration parameters ###
+WEB_HOST = "192.168.56.10"
+DB_HOST = "192.168.56.12"
+DB_USER = "myuser"
+DB_PASS = "mypassword"
+DB_NAME = "myapp"
+BOX_RAM_MB = 1024
 
 Vagrant.configure("2") do |config|
   
@@ -31,18 +34,18 @@ Vagrant.configure("2") do |config|
 
 	  # Create a private network, which allows host-only access to the machine
 	  # using a specific IP.
-	  web.vm.network "private_network", ip: "192.168.56.10"
+	  web.vm.network "private_network", ip: WEB_HOST
 	    
 	  # Provider-specific configurations: such as memory allocation.
 	  web.vm.provider "virtualbox" do |vb|
-	     vb.memory = "1024"
+	     vb.memory = BOX_RAM_MB
 	     vb.name = "web-server"
 	  end
 	  
 	  # Enable provisioning with a Shell script.
 	  web.vm.provision "bootstrap-config", type: "shell" do |script|
 		  script.path = "./vagrant-scripts/web-provisioning.sh"
-		  script.args = [db_host, db_user, db_pass, db_name]
+		  script.args = [DB_HOST, DB_USER, DB_PASS, DB_NAME]
 	  end
   end
   
@@ -56,18 +59,18 @@ Vagrant.configure("2") do |config|
 	  
     # Create a private network, which allows host-only access to the machine
 	  # using a specific IP.
-	  db.vm.network "private_network", ip: "192.168.56.12"
+	  db.vm.network "private_network", ip: DB_HOST
 	  
 	  # Provider-specific configurations: such as memory allocation.
 	  db.vm.provider "virtualbox" do |vb|
-	     vb.memory = "1024"
+	     vb.memory = BOX_RAM_MB
 	     vb.name = "db-server"
 	  end
 
     # Enable provisioning with a Shell script.
 	  db.vm.provision "bootstrap-config", type: "shell" do |script|
 		  script.path = "./vagrant-scripts/db-provisioning.sh"
-		  script.args = [db_host]
+		  script.args = [DB_HOST]
 	  end
   end
 end

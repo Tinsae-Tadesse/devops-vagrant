@@ -34,7 +34,7 @@ my-static-site/
 │   │   ├── contact.js
 ├── images/
 ├── server-scripts/
-│   ├── config.php.template
+│   ├── config.php.template   # modified on provisioning
 │   ├── contact.php
 │   ├── db-connect.php
 ├── vagrant-scripts/
@@ -43,8 +43,9 @@ my-static-site/
 ├── index.html
 ├── Vagrantfile
 ```
-- `Vagrantfile`: Configuration file for the vagrant virtual machine
-- `vagrant-scripts/provision.sh`: Shell script to provision Apache2 and fetch your site content
+- `Vagrantfile`: Configuration file for the vagrant virtual machines
+- `vagrant-scripts/web_provision.sh`: Shell script to provision Apache2 + PHP and fetch site content
+- `vagrant-scripts/db_provision.sh`: Shell script to provision MySQL
 
 ---
 
