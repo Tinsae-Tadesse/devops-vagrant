@@ -68,10 +68,10 @@ sudo chmod -R 755 $WEB_ROOT
 # Configuring php
 echo """
 <?php
-define("DB_HOST", "$DB_HOST");
-define("DB_USER", "$DB_USER");
-define("DB_PASS", "$DB_PASS");
-define("DB_NAME", "$DB_NAME");
+define('DB_HOST', '${DB_HOST}');
+define('DB_USER', '${DB_USER}');
+define('DB_PASS', '${DB_PASS}');
+define('DB_NAME', '${DB_NAME}');
 ?>
 """ | sudo tee "$PHP_ROOT/config.php.template" > /dev/null
 sudo mv "$PHP_ROOT/config.php.template" "$PHP_ROOT/config.php"
